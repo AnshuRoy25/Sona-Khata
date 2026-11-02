@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import Icon from "./Icon.jsx";
-import { useLang } from "../context/LanguageContext.jsx";
 
 export default function Modal({ title, onClose, children, wide }) {
-  const { t } = useLang();
   // close on Escape
   useEffect(
     function () {
@@ -29,7 +27,7 @@ export default function Modal({ title, onClose, children, wide }) {
       >
         <div className="modal-head">
           <h2>{title}</h2>
-          <button className="icon-btn" onClick={onClose} aria-label={t("common.close")}>
+          <button className="icon-btn" onClick={onClose} aria-label="Close">
             <Icon name="x" />
           </button>
         </div>

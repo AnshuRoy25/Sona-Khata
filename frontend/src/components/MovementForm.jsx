@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useLang } from "../context/LanguageContext.jsx";
 
 function toText(value) {
   if (value === null || value === undefined) return "";
@@ -9,7 +8,6 @@ function toText(value) {
 // Form for gold moving on a running order.
 // mode "issue": jeweller gives more gold. mode "return": karigar gives gold back.
 export default function MovementForm({ mode, initial, onSubmit, onCancel, submitLabel }) {
-  const { t } = useLang();
   const start = initial || {};
   const [weight, setWeight] = useState(toText(start.weightGrams));
   const [note, setNote] = useState(toText(start.note));
@@ -23,7 +21,7 @@ export default function MovementForm({ mode, initial, onSubmit, onCancel, submit
 
     const grams = Number(weight);
     if (weight === "" || isNaN(grams) || grams <= 0) {
-      setError(t("move.err.weight"));
+      setError("Enter the weight in grams");
       return;
     }
 
@@ -44,13 +42,13 @@ export default function MovementForm({ mode, initial, onSubmit, onCancel, submit
     }
   }
 
-  let defaultLabel = t("move.issueBtn");
-  if (mode === "return") defaultLabel = t("move.returnBtn");
+  let defaultLabel = "Issue gold";
+  if (mode === "return") defaultLabel = "Record return";
 
   return (
     <form className="form" onSubmit={handleSubmit} noValidate>
       <div className="field">
-        <label htmlFor={mode + "-weight"}>{mode === "return" ? t("move.returned") : t("move.extra")}</label>
+        <label htmlFor={mode + "-weight"}>{mode === "return" ? "Weight returned" : "Extra gold"}</label>
         <div className="input-unit">
           <input
             id={mode + "-weight"}
@@ -66,13 +64,13 @@ export default function MovementForm({ mode, initial, onSubmit, onCancel, submit
       </div>
 
       <div className="field">
-        <label htmlFor={mode + "-note"}>{t("form.note")}</label>
+        <label htmlFor={mode + "-note"}>Note (optional)</label>
         <input
           id={mode + "-note"}
           type="text"
           value={note}
           onChange={(e) => setNote(e.target.value)}
-          placeholder={mode === "return" ? t("move.notePlaceholderReturn") : t("move.notePlaceholderIssue")}
+          placeholder={mode === "return" ? "e.g. polish done, 2 stones loose" : "e.g. design needs more gold"}
         />
       </div>
 
@@ -80,8 +78,8 @@ export default function MovementForm({ mode, initial, onSubmit, onCancel, submit
         <label className="check-row">
           <input type="checkbox" checked={isFinal} onChange={(e) => setIsFinal(e.target.checked)} />
           <span>
-            {t("move.final")}
-            <small>{t("move.finalHint")}</small>
+            This is the final return
+            <small>The order is marked delivered once the jeweller confirms it</small>
           </span>
         </label>
       )}
@@ -91,11 +89,11 @@ export default function MovementForm({ mode, initial, onSubmit, onCancel, submit
       <div className="form-actions">
         {onCancel && (
           <button type="button" className="btn" onClick={onCancel}>
-            {t("common.cancel")}
+            Cancel
           </button>
         )}
         <button type="submit" className="btn btn-primary" disabled={saving}>
-          {saving ? t("common.saving") : submitLabel || defaultLabel}
+          {saving ? "Saving..." : submitLabel || defaultLabel}
         </button>
       </div>
     </form>

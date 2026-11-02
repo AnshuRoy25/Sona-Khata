@@ -65,21 +65,6 @@
   font-size: 13px;
 }
 
-.btn-lg {
-  padding: 12px 22px;
-  font-size: 15.5px;
-}
-
-.btn-gold {
-  background: var(--gold-bright);
-  border-color: var(--gold-bright);
-  color: var(--green);
-}
-
-.btn-gold:hover {
-  background: #e4bd67;
-}
-
 .btn-block {
   width: 100%;
   padding: 11px 16px;
@@ -954,38 +939,4 @@
   .agent-panel {
     width: 100%;
   }
-}
-
-/* ---------- language switch ---------- */
-
-.lang-switch {
-  display: inline-flex;
-  padding: 2px;
-  border: 1px solid var(--line-strong);
-  border-radius: 20px;
-  background: var(--surface);
-}
-
-.lang-switch button {
-  min-width: 38px;
-  padding: 4px 10px;
-  border: none;
-  border-radius: 16px;
-  background: transparent;
-  color: var(--ink-2);
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1.4;
-}
-
-.lang-switch button.is-active {
-  background: var(--green);
-  color: #fff;
-}
-
-/* ---------- small dialog text ---------- */
-
-.modal-text {
-  color: var(--ink-2);
-  margin-bottom: 18px;
 }

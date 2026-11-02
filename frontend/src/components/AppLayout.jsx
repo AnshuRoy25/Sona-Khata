@@ -1,9 +1,5 @@
-import { useState } from "react";
 import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 import Icon from "./Icon.jsx";
-import Modal from "./Modal.jsx";
-import LanguageSwitch from "./LanguageSwitch.jsx";
-import { useLang } from "../context/LanguageContext.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import { LedgerProvider, useLedgerData } from "../context/LedgerContext.jsx";
 import { VoiceProvider, useVoice } from "../context/VoiceContext.jsx";
@@ -35,10 +31,8 @@ function Shell() {
   const { user, logout } = useAuth();
   const ledger = useLedgerData();
   const { openVoice } = useVoice();
-  const { t } = useLang();
   const navigate = useNavigate();
   const location = useLocation();
-  const [askLogout, setAskLogout] = useState(false);
 
   // "Orders" covers the list and order pages, but not the new order form
   const onOrders = location.pathname.startsWith("/orders") && location.pathname !== "/orders/new";
@@ -46,37 +40,36 @@ function Shell() {
   const waiting = countWaiting(ledger, user.role);
 
   function handleLogout() {
-    setAskLogout(false);
     logout();
-    navigate("/", { replace: true });
+    navigate("/login");
   }
 
-  let place = user.role === "jeweller" ? t("common.jeweller") : t("common.karigar");
+  let place = user.role === "jeweller" ? "Jeweller" : "Karigar";
   if (user.shopName) place = user.shopName;
   else if (user.city) place = place + ", " + user.city;
 
   return (
     <div className="shell">
       <aside className="sidebar">
-        <NavLink to="/dashboard" className="brand">
+        <div className="brand">
           <span className="brand-mark" aria-hidden="true" />
           <span className="brand-name">GoldLedger</span>
-        </NavLink>
+        </div>
 
         <nav className="nav">
-          <NavLink to="/dashboard" className="nav-link">
+          <NavLink to="/" end className="nav-link">
             <Icon name="overview" />
-            {t("nav.overview")}
+            Overview
             {waiting > 0 && <span className="nav-count">{waiting}</span>}
           </NavLink>
           <NavLink to="/orders" className={() => "nav-link" + (onOrders ? " active" : "")}>
             <Icon name="orders" />
-            {t("nav.orders")}
+            Orders
           </NavLink>
           {user.role === "jeweller" && (
             <NavLink to="/orders/new" className="nav-link nav-link-new">
               <Icon name="plus" />
-              {t("nav.newOrder")}
+              New order
             </NavLink>
           )}
         </nav>
@@ -86,14 +79,10 @@ function Shell() {
             <Icon name="mic" size={20} />
           </span>
           <span>
-            <strong>{t("nav.assistant")}</strong>
-            <small>{t("nav.assistantSub")}</small>
+            <strong>Talk to assistant</strong>
+            <small>Hindi, English or both</small>
           </span>
         </button>
-
-        <div className="sidebar-lang">
-          <LanguageSwitch />
-        </div>
 
         <div className="sidebar-user">
           <span className="avatar">{initials(user.name)}</span>
@@ -101,12 +90,7 @@ function Shell() {
             <strong>{user.name}</strong>
             <small>{place}</small>
           </span>
-          <button
-            className="icon-btn"
-            onClick={() => setAskLogout(true)}
-            title={t("nav.logout")}
-            aria-label={t("nav.logout")}
-          >
+          <button className="icon-btn" onClick={handleLogout} title="Log out" aria-label="Log out">
             <Icon name="logout" />
           </button>
         </div>
@@ -116,23 +100,9 @@ function Shell() {
         <Outlet />
       </main>
 
-      <button className="fab-voice" onClick={openVoice} aria-label={t("nav.assistant")}>
+      <button className="fab-voice" onClick={openVoice} aria-label="Talk to assistant">
         <Icon name="mic" size={24} />
       </button>
-
-      {askLogout && (
-        <Modal title={t("logout.title")} onClose={() => setAskLogout(false)}>
-          <p className="modal-text">{t("logout.text")}</p>
-          <div className="form-actions">
-            <button className="btn" onClick={() => setAskLogout(false)}>
-              {t("common.cancel")}
-            </button>
-            <button className="btn btn-danger" onClick={handleLogout} autoFocus>
-              {t("logout.confirm")}
-            </button>
-          </div>
-        </Modal>
-      )}
     </div>
   );
 }

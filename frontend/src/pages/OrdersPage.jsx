@@ -2,14 +2,18 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useLedgerData } from "../context/LedgerContext.jsx";
-import { useLang } from "../context/LanguageContext.jsx";
-import { usePageTitle } from "../hooks/usePageTitle.js";
 import Icon from "../components/Icon.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
 import { otherParty, deadlineInfo, isWaitingFor, isActive } from "../lib/orderUtils.js";
 import { formatGrams, mgToGrams, formatRupees, formatShortDate } from "../lib/format.js";
 
-const TABS = ["all", "pending_confirmation", "open", "delivered", "cancelled"];
+const TABS = [
+  { key: "all", label: "All" },
+  { key: "pending_confirmation", label: "Awaiting receipt" },
+  { key: "open", label: "In progress" },
+  { key: "delivered", label: "Delivered" },
+  { key: "cancelled", label: "Cancelled" },
+];
 
 export default function OrdersPage() {
   const { user } = useAuth();
@@ -17,8 +21,6 @@ export default function OrdersPage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState("all");
   const [search, setSearch] = useState("");
-  const { t } = useLang();
-  usePageTitle(t("orders.title"));
 
   const role = user.role;
   const query = search.trim().toLowerCase();
@@ -61,11 +63,11 @@ export default function OrdersPage() {
       <tr key={order._id} className="row-link" onClick={() => navigate("/orders/" + order._id)}>
         <td>
           <span className="order-no">{order.orderNo}</span>
-          {waitingHere && <span className="dot-flag" title={t("orders.waitingDot")} />}
+          {waitingHere && <span className="dot-flag" title="Waiting for your confirmation" />}
         </td>
         <td>
           <div className="cell-main">{person}</div>
-          <div className="cell-sub">{t("orders.since", { date: formatShortDate(order.createdAt) })}</div>
+          <div className="cell-sub">Since {formatShortDate(order.createdAt)}</div>
         </td>
         <td>
           {order.item}
@@ -87,17 +89,17 @@ export default function OrdersPage() {
 
   const tabButtons = [];
   for (let i = 0; i < TABS.length; i++) {
-    const key = TABS[i];
+    const t = TABS[i];
     tabButtons.push(
       <button
-        key={key}
+        key={t.key}
         role="tab"
-        aria-selected={tab === key}
-        className={"tab" + (tab === key ? " is-active" : "")}
-        onClick={() => setTab(key)}
+        aria-selected={tab === t.key}
+        className={"tab" + (tab === t.key ? " is-active" : "")}
+        onClick={() => setTab(t.key)}
       >
-        {key === "all" ? t("orders.tab.all") : t("status." + key)}
-        <span className="tab-count">{counts[key] || 0}</span>
+        {t.label}
+        <span className="tab-count">{counts[t.key] || 0}</span>
       </button>
     );
   }
@@ -106,14 +108,18 @@ export default function OrdersPage() {
     <div className="page">
       <header className="page-head">
         <div>
-          <h1>{t("orders.title")}</h1>
-          <p className="muted">{role === "jeweller" ? t("orders.subJ") : t("orders.subK")}</p>
+          <h1>Orders</h1>
+          <p className="muted">
+            {role === "jeweller"
+              ? "Every piece of work you have given to a karigar"
+              : "Every piece of work you have taken from a jeweller"}
+          </p>
         </div>
         {role === "jeweller" && (
           <div className="page-actions">
             <Link to="/orders/new" className="btn btn-primary">
               <Icon name="plus" size={16} />
-              {t("nav.newOrder")}
+              New order
             </Link>
           </div>
         )}
@@ -130,31 +136,31 @@ export default function OrdersPage() {
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("orders.search")}
+              placeholder="Search order, name or item"
             />
           </label>
         </div>
 
         {ledger.loading ? (
-          <div className="page-loading">{t("orders.loading")}</div>
+          <div className="page-loading">Loading orders</div>
         ) : rows.length === 0 ? (
           <div className="empty-block">
-            <p>{query ? t("orders.noMatch") : t("orders.none")}</p>
+            <p>{query ? "No orders match your search." : "No orders here yet."}</p>
           </div>
         ) : (
           <div className="table-scroll">
             <table className="table">
               <thead>
                 <tr>
-                  <th>{t("col.order")}</th>
-                  <th>{role === "jeweller" ? t("common.karigar") : t("common.jeweller")}</th>
-                  <th>{t("col.item")}</th>
-                  <th className="num-cell">{t("col.issued")}</th>
-                  <th className="num-cell">{t("col.withKarigar")}</th>
-                  <th className="num-cell">{t("col.wastage")}</th>
-                  <th className="num-cell">{t("col.labour")}</th>
-                  <th>{t("col.due")}</th>
-                  <th>{t("col.status")}</th>
+                  <th>Order</th>
+                  <th>{role === "jeweller" ? "Karigar" : "Jeweller"}</th>
+                  <th>Item</th>
+                  <th className="num-cell">Issued</th>
+                  <th className="num-cell">With karigar</th>
+                  <th className="num-cell">Wastage</th>
+                  <th className="num-cell">Labour</th>
+                  <th>Due</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>{rows}</tbody>

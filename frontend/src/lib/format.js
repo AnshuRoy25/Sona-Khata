@@ -1,5 +1,3 @@
-import { dateLocale } from "./i18n.js";
-
 // ---------- weights ----------
 
 export function mgToGrams(mg) {
@@ -29,18 +27,18 @@ export function formatRupees(amount) {
 
 export function formatDate(value) {
   if (!value) return "";
-  return new Date(value).toLocaleDateString(dateLocale(), { day: "numeric", month: "short", year: "numeric" });
+  return new Date(value).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
 }
 
 export function formatShortDate(value) {
   if (!value) return "";
-  return new Date(value).toLocaleDateString(dateLocale(), { day: "numeric", month: "short" });
+  return new Date(value).toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 }
 
 export function formatDateTime(value) {
   if (!value) return "";
   const d = new Date(value);
-  const date = d.toLocaleDateString(dateLocale(), { day: "numeric", month: "short" });
+  const date = d.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
   const time = d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
   return date + ", " + time;
 }
@@ -72,15 +70,9 @@ export function toDateInput(date) {
   return d.getFullYear() + "-" + month + "-" + day;
 }
 
-// which greeting key to use: dash.morning / dash.afternoon / dash.evening
-export function greetingKey() {
+export function greeting() {
   const hour = new Date().getHours();
-  if (hour < 12) return "dash.morning";
-  if (hour < 17) return "dash.afternoon";
-  return "dash.evening";
-}
-
-// "Tuesday, 3 November" in the current language
-export function dateLongToday() {
-  return new Date().toLocaleDateString(dateLocale(), { weekday: "long", day: "numeric", month: "long" });
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
 }

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { todayInput } from "../lib/format.js";
-import { useLang } from "../context/LanguageContext.jsx";
 
 const PHONE_REGEX = /^[6-9]\d{9}$/;
 
@@ -9,11 +8,11 @@ function toText(value) {
   return String(value);
 }
 
-// Form for a new order.
+// Form for a new order. Used for typing an order and for checking a voice draft.
+// initial: values to start with (e.g. from a voice draft)
 // knownKarigars: [{ name, phone }] the jeweller has worked with
-export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCancel }) {
-  const { t } = useLang();
-  const start = {};
+export default function OrderForm({ initial, knownKarigars, onSubmit, submitLabel, onCancel }) {
+  const start = initial || {};
   const karigars = knownKarigars || [];
 
   const [values, setValues] = useState({
@@ -48,18 +47,18 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
     const weight = Number(values.weightGrams);
     const wastage = Number(values.wastageGrams);
 
-    if (!PHONE_REGEX.test(values.karigarPhone)) found.karigarPhone = t("form.err.phone");
-    if (!values.item.trim()) found.item = t("form.err.item");
-    if (values.weightGrams === "" || isNaN(weight) || weight <= 0) found.weightGrams = t("form.err.weight");
+    if (!PHONE_REGEX.test(values.karigarPhone)) found.karigarPhone = "Enter the karigar's 10 digit mobile number";
+    if (!values.item.trim()) found.item = "What is being made?";
+    if (values.weightGrams === "" || isNaN(weight) || weight <= 0) found.weightGrams = "Enter the gold weight in grams";
     if (values.wastageGrams === "" || isNaN(wastage) || wastage < 0) {
-      found.wastageGrams = t("form.err.wastage");
+      found.wastageGrams = "Enter the agreed wastage (0 is fine)";
     } else if (weight > 0 && wastage >= weight) {
-      found.wastageGrams = t("form.err.wastageBig");
+      found.wastageGrams = "Wastage must be less than the weight issued";
     }
     if (!values.deadline) {
-      found.deadline = t("form.err.deadline");
+      found.deadline = "Pick a deadline";
     } else if (values.deadline <= todayInput()) {
-      found.deadline = t("form.err.deadlinePast");
+      found.deadline = "Deadline must be after today";
     }
 
     setErrors(found);
@@ -104,8 +103,14 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
 
   return (
     <form className="form" onSubmit={handleSubmit} noValidate>
+      {start.karigarName && !start.karigarPhone && (
+        <p className="notice notice-amber">
+          {start.karigarName} is not one of your karigars yet. Enter their phone number. They need a GoldLedger account.
+        </p>
+      )}
+
       <div className="field">
-        <label htmlFor="karigarPhone">{t("form.karigarPhone")}</label>
+        <label htmlFor="karigarPhone">Karigar's phone</label>
         <input
           id="karigarPhone"
           type="tel"
@@ -114,7 +119,7 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
           list="known-karigars"
           value={values.karigarPhone}
           onChange={(e) => setField("karigarPhone", e.target.value.replace(/\D/g, ""))}
-          placeholder={t("form.phonePlaceholder")}
+          placeholder="10 digit mobile number"
         />
         <datalist id="known-karigars">{karigarOptions}</datalist>
         {matchedName && !errors.karigarPhone && <span className="field-hint">{matchedName}</span>}
@@ -123,18 +128,18 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
 
       <div className="field-row">
         <div className="field grow">
-          <label htmlFor="item">{t("form.item")}</label>
+          <label htmlFor="item">Item</label>
           <input
             id="item"
             type="text"
             value={values.item}
             onChange={(e) => setField("item", e.target.value)}
-            placeholder={t("form.itemPlaceholder")}
+            placeholder="e.g. Rani haar, Kangan"
           />
           {errors.item && <span className="field-error">{errors.item}</span>}
         </div>
         <div className="field narrow">
-          <label htmlFor="quantity">{t("form.pieces")}</label>
+          <label htmlFor="quantity">Pieces</label>
           <input
             id="quantity"
             type="number"
@@ -147,7 +152,7 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
 
       <div className="field-row">
         <div className="field">
-          <label htmlFor="weightGrams">{t("form.goldIssued")}</label>
+          <label htmlFor="weightGrams">Gold issued</label>
           <div className="input-unit">
             <input
               id="weightGrams"
@@ -163,7 +168,7 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
           {errors.weightGrams && <span className="field-error">{errors.weightGrams}</span>}
         </div>
         <div className="field">
-          <label htmlFor="wastageGrams">{t("form.wastage")}</label>
+          <label htmlFor="wastageGrams">Agreed wastage</label>
           <div className="input-unit">
             <input
               id="wastageGrams"
@@ -179,7 +184,7 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
           {errors.wastageGrams && <span className="field-error">{errors.wastageGrams}</span>}
         </div>
         <div className="field">
-          <label htmlFor="labourCharge">{t("form.labour")}</label>
+          <label htmlFor="labourCharge">Labour charge</label>
           <div className="input-unit input-unit-left">
             <span>₹</span>
             <input
@@ -196,7 +201,7 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
 
       <div className="field-row">
         <div className="field">
-          <label htmlFor="deadline">{t("form.deadline")}</label>
+          <label htmlFor="deadline">Deadline</label>
           <input
             id="deadline"
             type="date"
@@ -207,25 +212,25 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
           {errors.deadline && <span className="field-error">{errors.deadline}</span>}
         </div>
         <div className="field">
-          <label htmlFor="occasionDate">{t("form.occasion")}</label>
+          <label htmlFor="occasionDate">Occasion date (optional)</label>
           <input
             id="occasionDate"
             type="date"
             value={values.occasionDate}
             onChange={(e) => setField("occasionDate", e.target.value)}
           />
-          <span className="field-hint">{t("form.occasionHint")}</span>
+          <span className="field-hint">A wedding or festival that cannot move</span>
         </div>
       </div>
 
       <div className="field">
-        <label htmlFor="note">{t("form.note")}</label>
+        <label htmlFor="note">Note (optional)</label>
         <input
           id="note"
           type="text"
           value={values.note}
           onChange={(e) => setField("note", e.target.value)}
-          placeholder={t("form.notePlaceholder")}
+          placeholder="Design details, stones, anything to remember"
         />
       </div>
 
@@ -234,11 +239,11 @@ export default function OrderForm({ knownKarigars, onSubmit, submitLabel, onCanc
       <div className="form-actions">
         {onCancel && (
           <button type="button" className="btn" onClick={onCancel}>
-            {t("common.cancel")}
+            Cancel
           </button>
         )}
         <button type="submit" className="btn btn-primary" disabled={saving}>
-          {saving ? t("common.saving") : submitLabel || t("form.issue")}
+          {saving ? "Saving..." : submitLabel || "Issue gold"}
         </button>
       </div>
     </form>
