@@ -1,0 +1,25 @@
+[
+  {
+    "_id": "6724f1a9c3e2b1a0d4f8e910",
+    "name": "Ramesh Gupta",
+    "phone": "9876500001",
+    "role": "jeweller",
+    "language": "hinglish",
+    "shopName": "Ramesh Jewellers",
+    "city": "Panipat",
+    "createdAt": "2026-11-01T10:20:00.000Z",
+    "updatedAt": "2026-11-01T10:20:00.000Z",
+    "__v": 0
+  },
+  {
+    "_id": "6724f1a9c3e2b1a0d4f8e912",
+    "name": "Rajesh Kumar",
+    "phone": "9876500002",
+    "role": "karigar",
+    "language": "hi",
+    "city": "Panipat",
+    "createdAt": "2026-11-01T10:21:00.000Z",
+    "updatedAt": "2026-11-01T10:21:00.000Z",
+    "__v": 0
+  }
+]

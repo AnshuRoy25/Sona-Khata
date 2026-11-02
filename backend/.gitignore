@@ -1,0 +1,21 @@
+# dependencies
+node_modules/
+
+# secrets
+.env
+.env.*
+
+
+# logs
+*.log
+npm-debug.log*
+
+# test audio files made by scripts
+*.mp3
+*.wav
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

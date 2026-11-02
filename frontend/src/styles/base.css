@@ -1,0 +1,143 @@
+:root {
+  /* surfaces */
+  --paper: #f2f3ef;
+  --surface: #ffffff;
+  --surface-2: #f8f9f6;
+  --line: #e1e3dd;
+  --line-strong: #cdd0c8;
+
+  /* text */
+  --ink: #17201b;
+  --ink-2: #4e5650;
+  --ink-3: #7f867f;
+
+  /* brand: touchstone green and gold */
+  --green: #1f3d35;
+  --green-hover: #16302a;
+  --green-soft: #e6eeea;
+  --gold: #b07d1c;
+  --gold-bright: #d9ae52;
+  --gold-soft: #f7eed9;
+
+  /* states */
+  --ok: #1d7a46;
+  --ok-soft: #e8f4ec;
+  --warn: #9a5b06;
+  --warn-soft: #fbf1de;
+  --bad: #b42318;
+  --bad-soft: #fcedea;
+  --info: #2b5ca8;
+  --info-soft: #ebf1fa;
+
+  --radius: 8px;
+  --radius-lg: 12px;
+  --shadow-pop: 0 12px 40px -12px rgba(23, 32, 27, 0.35);
+
+  --font: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-deva: "Noto Sans Devanagari", "Public Sans", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 {
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+h2 {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+h3 {
+  font-size: 15px;
+  font-weight: 650;
+  margin-bottom: 12px;
+}
+
+a {
+  color: var(--green);
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.num,
+.num-cell,
+.grams,
+.order-no {
+  font-variant-numeric: tabular-nums;
+}
+
+.muted {
+  color: var(--ink-3);
+}
+
+.devanagari {
+  font-family: var(--font-deva);
+}
+
+/* Hindi interface: Noto Sans Devanagari also covers English letters and numbers */
+html[lang="hi"] body {
+  font-family: var(--font-deva);
+}
+
+.tone-red {
+  color: var(--bad);
+  font-weight: 600;
+}
+.tone-amber {
+  color: var(--warn);
+  font-weight: 600;
+}
+.tone-green {
+  color: var(--ok);
+}
+.tone-blue {
+  color: var(--info);
+}
+.tone-muted {
+  color: var(--ink-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

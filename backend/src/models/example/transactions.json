@@ -1,0 +1,35 @@
+[
+  {
+    "_id": "6724f1a9c3e2b1a0d4f8e920",
+    "order": "6724f1a9c3e2b1a0d4f8e915",
+    "type": "issue",
+    "weightMg": 100000,
+    "recordedBy": "6724f1a9c3e2b1a0d4f8e910",
+    "confirmations": {
+      "jeweller": { "confirmed": true, "at": "2026-11-12T10:42:00.000Z" },
+      "karigar": { "confirmed": true, "at": "2026-11-12T10:44:31.000Z" }
+    },
+    "locked": true,
+    "audioUrl": "https://storage.example.com/audio/r1042-issue.webm",
+    "transcript": "Ramesh Jewellers se 100 gram mila, rani haar ke liye, teen gram wastage, bees din mein dena hai",
+    "createdAt": "2026-11-12T10:42:00.000Z",
+    "updatedAt": "2026-11-12T10:44:31.000Z",
+    "__v": 0
+  },
+  {
+    "_id": "6724f1a9c3e2b1a0d4f8e931",
+    "order": "6724f1a9c3e2b1a0d4f8e915",
+    "type": "return",
+    "weightMg": 97000,
+    "note": "Polish complete",
+    "recordedBy": "6724f1a9c3e2b1a0d4f8e912",
+    "confirmations": {
+      "jeweller": { "confirmed": true, "at": "2026-11-28T06:15:00.000Z" },
+      "karigar": { "confirmed": true, "at": "2026-11-28T06:10:12.000Z" }
+    },
+    "locked": true,
+    "createdAt": "2026-11-28T06:10:12.000Z",
+    "updatedAt": "2026-11-28T06:15:00.000Z",
+    "__v": 0
+  }
+]
