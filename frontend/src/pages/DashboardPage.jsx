@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { useLedgerData } from "../context/LedgerContext.jsx";
 import { useVoice } from "../context/VoiceContext.jsx";
+import { useLang } from "../context/LanguageContext.jsx";
+import { usePageTitle } from "../hooks/usePageTitle.js";
 import Icon from "../components/Icon.jsx";
 import Grams from "../components/Grams.jsx";
 import StatusBadge from "../components/StatusBadge.jsx";
@@ -13,16 +15,18 @@ import {
   isWaitingFor,
   deadlineInfo,
   entrySpeech,
-  ENTRY_LABELS,
+  entryLabel,
 } from "../lib/orderUtils.js";
-import { mgToGrams, formatRupees, formatDateTime, greeting, formatGrams } from "../lib/format.js";
+import { mgToGrams, formatRupees, formatDateTime, greetingKey, formatGrams, dateLongToday } from "../lib/format.js";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const ledger = useLedgerData();
   const { openVoice } = useVoice();
+  const { t } = useLang();
   const navigate = useNavigate();
   const role = user.role;
+  usePageTitle(t("nav.overview"));
 
   // ---------- work out the numbers ----------
 
@@ -70,7 +74,7 @@ export default function DashboardPage() {
       return (
         <div className="empty-inline">
           <Icon name="check" />
-          <span>Nothing is waiting for you. Every entry you are part of is confirmed.</span>
+          <span>{t("dash.nothingWaiting")}</span>
         </div>
       );
     }
@@ -88,15 +92,15 @@ export default function DashboardPage() {
           </div>
           <div className="waiting-text">
             <p>
-              <strong>{byName}</strong> recorded {ENTRY_LABELS[txn.type].toLowerCase()}
-              {txn.isFinal ? " (final return)" : ""} for{" "}
+              {t("dash.recorded", { name: byName, what: entryLabel(txn.type).toLowerCase() })}
+              {txn.isFinal ? " " + t("dash.finalReturn") : ""}{" "}
               <Link to={"/orders/" + order._id}>
                 {order.item}, {order.orderNo}
               </Link>
             </p>
             <small>
               {formatDateTime(txn.createdAt)}
-              {txn.note ? ". Note: " + txn.note : ""}
+              {txn.note ? ". " + t("dash.note") + ": " + txn.note : ""}
             </small>
           </div>
           <EntryActions transaction={txn} speechText={entrySpeech(order, txn)} />
@@ -110,12 +114,8 @@ export default function DashboardPage() {
     if (active.length === 0) {
       return (
         <div className="empty-block">
-          <p>No running orders.</p>
-          {role === "jeweller" ? (
-            <p className="muted">Ask the assistant or create an order to issue gold to a karigar.</p>
-          ) : (
-            <p className="muted">Orders appear here when a jeweller issues gold to you.</p>
-          )}
+          <p>{t("dash.noRunning")}</p>
+          <p className="muted">{role === "jeweller" ? t("dash.noRunningJ") : t("dash.noRunningK")}</p>
         </div>
       );
     }
@@ -149,14 +149,14 @@ export default function DashboardPage() {
 
     return (
       <div className="table-scroll">
-      <table className="table">
+      <table className="table table-cards cards-dash">
         <thead>
           <tr>
-            <th>Order</th>
-            <th>{role === "jeweller" ? "Karigar" : "Jeweller"}</th>
-            <th className="num-cell">With karigar</th>
-            <th>Due</th>
-            <th>Status</th>
+            <th>{t("col.order")}</th>
+            <th>{role === "jeweller" ? t("common.karigar") : t("common.jeweller")}</th>
+            <th className="num-cell">{t("col.withKarigar")}</th>
+            <th>{t("col.due")}</th>
+            <th>{t("col.status")}</th>
           </tr>
         </thead>
         <tbody>{rows}</tbody>
@@ -167,7 +167,7 @@ export default function DashboardPage() {
 
   function renderLate() {
     if (late.length === 0) {
-      return <p className="panel-empty">Nothing is past its deadline.</p>;
+      return <p className="panel-empty">{t("dash.nothingLate")}</p>;
     }
     const rows = [];
     for (let i = 0; i < late.length; i++) {
@@ -191,7 +191,7 @@ export default function DashboardPage() {
 
   function renderActivity() {
     if (activity.length === 0) {
-      return <p className="panel-empty">Entries will show here as gold moves.</p>;
+      return <p className="panel-empty">{t("dash.noRecent")}</p>;
     }
     const rows = [];
     const limit = Math.min(activity.length, 7);
@@ -199,14 +199,14 @@ export default function DashboardPage() {
       const order = activity[i].order;
       const txn = activity[i].txn;
 
-      let state = "Waiting for " + (txn.confirmations.jeweller.confirmed ? "karigar" : "jeweller");
+      let state = txn.confirmations.jeweller.confirmed ? t("dash.waitingForK") : t("dash.waitingForJ");
       let tone = "blue";
       if (txn.locked) {
-        state = "Confirmed by both";
+        state = t("dash.confirmedBoth");
         tone = "green";
       }
       if (txn.rejection && txn.rejection.rejected) {
-        state = "Rejected";
+        state = t("dash.rejected");
         tone = "red";
       }
 
@@ -215,7 +215,7 @@ export default function DashboardPage() {
           <span className="feed-dot" aria-hidden="true" />
           <div>
             <p>
-              {ENTRY_LABELS[txn.type]}, <strong>{formatGrams(mgToGrams(txn.weightMg))} g</strong> on{" "}
+              {entryLabel(txn.type)}, <strong>{formatGrams(mgToGrams(txn.weightMg))} g</strong> {t("dash.on")}{" "}
               <Link to={"/orders/" + order._id}>{order.orderNo}</Link>
             </p>
             <small>
@@ -230,27 +230,25 @@ export default function DashboardPage() {
 
   // ---------- page ----------
 
-  const today = new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
+  const today = dateLongToday();
 
   return (
     <div className="page">
       <header className="page-head">
         <div>
-          <h1>
-            {greeting()}, {user.name.split(" ")[0]}
-          </h1>
+          <h1>{t(greetingKey(), { name: user.name.split(" ")[0] })}</h1>
           <p className="muted">{today}</p>
         </div>
         <div className="page-actions">
           {role === "jeweller" && (
             <Link to="/orders/new" className="btn">
               <Icon name="plus" size={16} />
-              New order
+              {t("nav.newOrder")}
             </Link>
           )}
           <button className="btn btn-primary" onClick={openVoice}>
             <Icon name="mic" size={16} />
-            Talk to assistant
+            {t("nav.assistant")}
           </button>
         </div>
       </header>
@@ -259,55 +257,55 @@ export default function DashboardPage() {
         <p className="notice notice-red">
           {ledger.error}{" "}
           <button className="link-btn" onClick={ledger.reload}>
-            Try again
+            {t("common.tryAgain")}
           </button>
         </p>
       )}
 
       <section className="stat-strip">
         <div className="stat stat-hero">
-          <span className="stat-label">{role === "jeweller" ? "Gold with your karigars" : "Gold with you"}</span>
+          <span className="stat-label">{role === "jeweller" ? t("dash.goldOutJ") : t("dash.goldOutK")}</span>
           <Grams value={goldOut} size="xl" />
           <span className="stat-note">
-            Across {active.length} running {active.length === 1 ? "order" : "orders"}
+            {active.length === 1 ? t("dash.acrossOrder") : t("dash.acrossOrders", { count: active.length })}
           </span>
         </div>
         <div className="stat">
-          <span className="stat-label">{role === "jeweller" ? "Labour to pay" : "Labour to receive"}</span>
+          <span className="stat-label">{role === "jeweller" ? t("dash.labourJ") : t("dash.labourK")}</span>
           <span className="stat-value">{formatRupees(labourDue)}</span>
           <span className="stat-note">
-            {deliveredCount === 1 ? "1 delivered order" : deliveredCount + " delivered orders"}
+            {deliveredCount === 1 ? t("dash.deliveredOne") : t("dash.deliveredMany", { count: deliveredCount })}
           </span>
         </div>
         <div className="stat">
-          <span className="stat-label">Waiting for you</span>
+          <span className="stat-label">{t("dash.waiting")}</span>
           <span className="stat-value">{waiting.length}</span>
-          <span className="stat-note">{waiting.length === 1 ? "entry to confirm" : "entries to confirm"}</span>
+          <span className="stat-note">{waiting.length === 1 ? t("dash.entryToConfirm") : t("dash.entriesToConfirm")}</span>
         </div>
         <div className="stat">
-          <span className="stat-label">Late</span>
+          <span className="stat-label">{t("dash.late")}</span>
           <span className={"stat-value" + (late.length > 0 ? " tone-red" : "")}>{late.length}</span>
-          <span className="stat-note">past the deadline</span>
+          <span className="stat-note">{t("dash.pastDeadline")}</span>
         </div>
       </section>
 
       {ledger.loading ? (
-        <div className="page-loading">Loading your ledger</div>
+        <div className="page-loading">{t("dash.loading")}</div>
       ) : (
         <div className="dash-grid">
           <div className="dash-main">
             <section className="panel">
               <div className="panel-head">
-                <h2>Waiting for your confirmation</h2>
+                <h2>{t("dash.waitingTitle")}</h2>
               </div>
               {renderWaiting()}
             </section>
 
             <section className="panel">
               <div className="panel-head">
-                <h2>Running orders</h2>
+                <h2>{t("dash.running")}</h2>
                 <Link to="/orders" className="panel-link">
-                  All orders
+                  {t("dash.allOrders")}
                 </Link>
               </div>
               {renderActiveTable()}
@@ -317,14 +315,14 @@ export default function DashboardPage() {
           <div className="dash-side">
             <section className="panel">
               <div className="panel-head">
-                <h2>Late</h2>
+                <h2>{t("dash.late")}</h2>
               </div>
               {renderLate()}
             </section>
 
             <section className="panel">
               <div className="panel-head">
-                <h2>Recent entries</h2>
+                <h2>{t("dash.recent")}</h2>
               </div>
               {renderActivity()}
             </section>

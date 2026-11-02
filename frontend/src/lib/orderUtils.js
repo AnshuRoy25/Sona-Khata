@@ -1,28 +1,33 @@
-import { mgToGrams, shortGrams, spokenDate, daysFromToday } from "./format.js";
+import { mgToGrams, shortGrams, spokenDate, daysFromToday, formatDate } from "./format.js";
+import { t } from "./i18n.js";
 
-export const STATUS_INFO = {
-  pending_confirmation: { label: "Awaiting receipt", tone: "blue" },
-  open: { label: "In progress", tone: "amber" },
-  delivered: { label: "Delivered", tone: "green" },
-  disputed: { label: "Disputed", tone: "red" },
-  settled: { label: "Settled", tone: "grey" },
-  cancelled: { label: "Cancelled", tone: "grey" },
+// colour of each order status
+export const STATUS_TONES = {
+  pending_confirmation: "blue",
+  open: "amber",
+  delivered: "green",
+  disputed: "red",
+  settled: "grey",
+  cancelled: "grey",
 };
 
-export const ENTRY_LABELS = {
-  issue: "Gold issued",
-  return: "Gold returned",
-  scrap: "Scrap returned",
-};
+export function statusLabel(status) {
+  return t("status." + status);
+}
+
+// "Gold issued", "Gold returned", "Scrap returned"
+export function entryLabel(type) {
+  return t("entry." + type);
+}
 
 // the jeweller as karigars refer to him: shop name first
 export function jewellerLabel(jeweller) {
-  if (!jeweller) return "Unknown jeweller";
+  if (!jeweller) return t("common.jeweller");
   return jeweller.shopName || jeweller.name;
 }
 
 export function karigarLabel(karigar) {
-  if (!karigar) return "Unknown karigar";
+  if (!karigar) return t("common.karigar");
   return karigar.name;
 }
 
@@ -45,19 +50,19 @@ export function deadlineInfo(order) {
   const days = daysFromToday(order.deadline);
 
   if (!isActive(order)) {
-    return { text: "Due " + spokenDate(order.deadline), tone: "muted" };
+    return { text: t("due.on", { date: formatDate(order.deadline) }), tone: "muted" };
   }
   if (days < 0) {
     const late = -days;
-    return { text: late === 1 ? "1 day late" : late + " days late", tone: "red" };
+    return { text: late === 1 ? t("due.lateOne") : t("due.lateMany", { days: late }), tone: "red" };
   }
   if (days === 0) {
-    return { text: "Due today", tone: "amber" };
+    return { text: t("due.today"), tone: "amber" };
   }
-  if (days <= 3) {
-    return { text: days === 1 ? "Due tomorrow" : "Due in " + days + " days", tone: "amber" };
+  if (days === 1) {
+    return { text: t("due.tomorrow"), tone: "amber" };
   }
-  return { text: "Due in " + days + " days", tone: "muted" };
+  return { text: t("due.inDays", { days: days }), tone: days <= 3 ? "amber" : "muted" };
 }
 
 // entry is still open and waiting for this side to confirm or reject

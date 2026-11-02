@@ -65,6 +65,21 @@
   font-size: 13px;
 }
 
+.btn-lg {
+  padding: 12px 22px;
+  font-size: 15.5px;
+}
+
+.btn-gold {
+  background: var(--gold-bright);
+  border-color: var(--gold-bright);
+  color: var(--green);
+}
+
+.btn-gold:hover {
+  background: #e4bd67;
+}
+
 .btn-block {
   width: 100%;
   padding: 11px 16px;
@@ -938,5 +953,159 @@
 @media (max-width: 560px) {
   .agent-panel {
     width: 100%;
+  }
+}
+
+/* ---------- language switch ---------- */
+
+.lang-switch {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--line-strong);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.lang-switch button {
+  min-width: 38px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--ink-2);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.lang-switch button.is-active {
+  background: var(--green);
+  color: #fff;
+}
+
+/* ---------- small dialog text ---------- */
+
+.modal-text {
+  color: var(--ink-2);
+  margin-bottom: 18px;
+}
+
+/* ---------- phones ---------- */
+
+@media (max-width: 640px) {
+  /* tables turn into stacked cards */
+  .table-cards thead {
+    display: none;
+  }
+
+  .table-cards,
+  .table-cards tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .table-cards tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    row-gap: 4px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .table-cards tr:last-child {
+    border-bottom: none;
+  }
+
+  .table-cards td {
+    display: block;
+    padding: 0;
+    border: none;
+    min-width: 0;
+  }
+
+  .table-cards .num-cell {
+    text-align: right;
+  }
+
+  /* dashboard: order, person, gold, due, status */
+  .cards-dash tr {
+    grid-template-areas:
+      "who status"
+      "no grams"
+      "due grams";
+  }
+  .cards-dash td:nth-child(1) { grid-area: no; }
+  .cards-dash td:nth-child(2) { grid-area: who; }
+  .cards-dash td:nth-child(3) { grid-area: grams; align-self: center; font-weight: 600; }
+  .cards-dash td:nth-child(4) { grid-area: due; font-size: 13px; }
+  .cards-dash td:nth-child(5) { grid-area: status; justify-self: end; }
+
+  /* orders: order, person, item, issued, with karigar, wastage, labour, due, status */
+  .cards-orders tr {
+    grid-template-areas:
+      "who status"
+      "item grams"
+      "no due";
+  }
+  .cards-orders td:nth-child(1) { grid-area: no; font-size: 13px; }
+  .cards-orders td:nth-child(2) { grid-area: who; }
+  .cards-orders td:nth-child(3) { grid-area: item; color: var(--ink-2); }
+  .cards-orders td:nth-child(4),
+  .cards-orders td:nth-child(6),
+  .cards-orders td:nth-child(7) { display: none; }
+  .cards-orders td:nth-child(5) { grid-area: grams; font-weight: 600; }
+  .cards-orders td:nth-child(8) { grid-area: due; justify-self: end; font-size: 13px; }
+  .cards-orders td:nth-child(9) { grid-area: status; justify-self: end; }
+
+  .table-scroll {
+    overflow: visible;
+  }
+
+  /* toasts across the top */
+  .toast-stack {
+    top: 64px;
+    left: 12px;
+    right: 12px;
+    max-width: none;
+  }
+
+  /* dialogs sit near the bottom, easy to reach with a thumb */
+  .modal-backdrop {
+    align-items: end;
+    padding: 12px;
+  }
+
+  /* assistant takes the whole screen */
+  .agent-panel {
+    width: 100%;
+    border-left: none;
+    height: 100%;
+    height: 100dvh;
+  }
+
+  .agent-head {
+    padding: 10px 12px;
+  }
+
+  .agent-composer {
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .agent-bubble {
+    max-width: 92%;
+  }
+
+  /* confirm / reject / listen wrap nicely */
+  .entry-actions {
+    flex-wrap: wrap;
+  }
+
+  .reject-form {
+    flex-wrap: wrap;
+  }
+
+  .reject-form input {
+    flex: 1 1 100%;
   }
 }

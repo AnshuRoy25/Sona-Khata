@@ -1,6 +1,8 @@
-import { STATUS_INFO } from "../lib/orderUtils.js";
+import { STATUS_TONES, statusLabel } from "../lib/orderUtils.js";
+import { useLang } from "../context/LanguageContext.jsx";
 
 export default function StatusBadge({ status }) {
-  const info = STATUS_INFO[status] || { label: status, tone: "grey" };
-  return <span className={"badge badge-" + info.tone}>{info.label}</span>;
+  useLang();
+  const tone = STATUS_TONES[status] || "grey";
+  return <span className={"badge badge-" + tone}>{statusLabel(status)}</span>;
 }

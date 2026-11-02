@@ -109,6 +109,11 @@ button {
   font-family: var(--font-deva);
 }
 
+/* Hindi interface: Noto Sans Devanagari also covers English letters and numbers */
+html[lang="hi"] body {
+  font-family: var(--font-deva);
+}
+
 .tone-red {
   color: var(--bad);
   font-weight: 600;

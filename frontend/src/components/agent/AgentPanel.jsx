@@ -2,34 +2,37 @@ import { useEffect, useRef, useState } from "react";
 import Icon from "../Icon.jsx";
 import SpeakButton from "../SpeakButton.jsx";
 import { startRecording } from "../../lib/wavRecorder.js";
-import { speak, stopSpeaking } from "../../lib/speech.js";
+import { speak, stopSpeaking, unlockAudio } from "../../lib/speech.js";
 import { agentChat, agentVoice } from "../../api/endpoints.js";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { useLang } from "../../context/LanguageContext.jsx";
 import { notifyLedgerChanged } from "../../hooks/useLedger.js";
 import { MAX_RECORDING_SECONDS } from "../../config.js";
 
+// things to try, per language and role
 const SUGGESTIONS = {
-  jeweller: [
-    "Tum kya kya kar sakte ho?",
-    "Rajesh ko sau gram diya, rani haar, teen gram wastage, bees din",
-    "Kaun kaun late hai?",
-    "Kitna sona karigaron ke paas hai?",
-  ],
-  karigar: [
-    "Kya kuch pending hai?",
-    "Mera kitna paisa baaki hai?",
-    "GL-1001 ka hisaab batao",
-  ],
+  en: {
+    jeweller: [
+      "What can you do?",
+      "Rajesh ko sau gram diya, rani haar, teen gram wastage, bees din",
+      "Kaun kaun late hai?",
+      "How much gold is with my karigars?",
+    ],
+    karigar: ["Is anything pending for me?", "Mera kitna paisa baaki hai?", "Which of my orders are late?"],
+  },
+  hi: {
+    jeweller: [
+      "तुम क्या क्या कर सकते हो?",
+      "राजेश को सौ ग्राम दिया, रानी हार, तीन ग्राम वेस्टेज, बीस दिन",
+      "कौन कौन लेट है?",
+      "कारीगरों के पास कितना सोना है?",
+    ],
+    karigar: ["क्या कुछ पेंडिंग है?", "मेरा कितना पैसा बाकी है?", "मेरे कौनसे ऑर्डर लेट हैं?"],
+  },
 };
 
-// tools that change the ledger, and how we show them in the chat
-const ACTION_LABELS = {
-  create_order: "Order created",
-  issue_extra_gold: "Extra gold recorded",
-  record_return: "Return recorded",
-  confirm_entry: "Entry confirmed",
-  reject_entry: "Entry rejected",
-};
+// tools that change the ledger; each shows a small "done" chip in the chat
+const ACTION_TOOLS = ["create_order", "issue_extra_gold", "record_return", "confirm_entry", "reject_entry"];
 
 const SILENCE_LEVEL = 0.05; // below this counts as quiet
 const SILENCE_MS = 1500; // stop after this much quiet, once speech has started
@@ -38,6 +41,7 @@ const BAR_COUNT = 18;
 // messages: [{ role, content, fromVoice, actions }]
 export default function AgentPanel({ messages, setMessages, onClose }) {
   const { user } = useAuth();
+  const { lang, t } = useLang();
 
   const [input, setInput] = useState("");
   const [phase, setPhase] = useState("idle"); // idle | recording | thinking
@@ -81,9 +85,9 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
     const actions = [];
     if (!toolsUsed) return actions;
     for (let i = 0; i < toolsUsed.length; i++) {
-      const t = toolsUsed[i];
-      if (ACTION_LABELS[t.name] && t.ok !== false) {
-        actions.push(ACTION_LABELS[t.name]);
+      const used = toolsUsed[i];
+      if (ACTION_TOOLS.indexOf(used.name) !== -1 && used.ok !== false) {
+        actions.push(used.name);
       }
     }
     return actions;
@@ -113,6 +117,7 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
     setError("");
     setInput("");
     stopSpeaking();
+    unlockAudio(); // lets the reply play on phones
 
     const list = messages.slice();
     list.push({ role: "user", content: clean });
@@ -153,6 +158,7 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
     setError("");
     setLevels([]);
     stopSpeaking();
+    unlockAudio(); // lets the reply play on phones
     heardRef.current = false;
     lastLoudRef.current = Date.now();
 
@@ -185,7 +191,7 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
     // 16 kHz × 2 bytes ≈ 32 KB per second, under half a second is too short
     if (audio.size < 16000 || !heardRef.current) {
       setPhase("idle");
-      setError("Didn't catch that. Tap the mic and speak again.");
+      setError(t("agent.didntCatch"));
       return;
     }
 
@@ -217,7 +223,7 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
   // ---------- pieces ----------
 
   function renderEmpty() {
-    const list = SUGGESTIONS[user.role] || [];
+    const list = SUGGESTIONS[lang][user.role] || [];
     const chips = [];
     for (let i = 0; i < list.length; i++) {
       chips.push(
@@ -231,11 +237,8 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
         <span className="agent-empty-icon">
           <Icon name="mic" size={26} />
         </span>
-        <h3>Namaste, {user.name.split(" ")[0]}</h3>
-        <p>
-          Bolkar ya likhkar poochiye. Orders, hisaab, pending entries, sab yahin se. Kuch bhi save karne se pehle main
-          aapse poochunga.
-        </p>
+        <h3>{t("agent.hello", { name: user.name.split(" ")[0] })}</h3>
+        <p>{t("agent.intro")}</p>
         <div className="agent-suggestions">{chips}</div>
       </div>
     );
@@ -252,7 +255,7 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
             <div className="agent-bubble">
               {m.fromVoice && (
                 <span className="agent-voice-tag">
-                  <Icon name="mic" size={12} /> Spoken
+                  <Icon name="mic" size={12} /> {t("agent.spoken")}
                 </span>
               )}
               <p className="devanagari">{m.content}</p>
@@ -267,7 +270,7 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
         for (let j = 0; j < m.actions.length; j++) {
           actions.push(
             <span key={j} className="agent-action">
-              <Icon name="check" size={13} /> {m.actions[j]}
+              <Icon name="check" size={13} /> {t("agent.done." + m.actions[j])}
             </span>
           );
         }
@@ -278,7 +281,7 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
           <div className="agent-bubble">
             {actions.length > 0 && <div className="agent-actions">{actions}</div>}
             <p className="devanagari">{m.content}</p>
-            {m.content && <SpeakButton text={m.content} label="Listen" small />}
+            {m.content && <SpeakButton text={m.content} small />}
           </div>
         </div>
       );
@@ -287,7 +290,7 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
     if (phase === "thinking") {
       rows.push(
         <div key="thinking" className="agent-msg agent-msg-bot">
-          <div className="agent-bubble agent-typing" aria-label="Thinking">
+          <div className="agent-bubble agent-typing" aria-label={t("agent.thinking")}>
             <span />
             <span />
             <span />
@@ -312,13 +315,13 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
     if (phase === "recording") {
       return (
         <div className="agent-composer agent-composer-rec">
-          <button className="agent-mic is-recording" onClick={stopMic} aria-label="Stop and send">
+          <button className="agent-mic is-recording" onClick={stopMic} aria-label={t("agent.stopSend")}>
             <Icon name="stop" size={18} />
           </button>
           {renderMeter()}
-          <span className="agent-rec-text">Sun raha hoon…</span>
+          <span className="agent-rec-text">{t("agent.listening")}</span>
           <button className="btn btn-ghost btn-sm" onClick={cancelMic}>
-            Cancel
+            {t("common.cancel")}
           </button>
         </div>
       );
@@ -327,17 +330,17 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
     const busy = phase === "thinking";
     return (
       <form className="agent-composer" onSubmit={handleSubmit}>
-        <button type="button" className="agent-mic" onClick={startMic} disabled={busy} aria-label="Speak">
+        <button type="button" className="agent-mic" onClick={startMic} disabled={busy} aria-label={t("agent.speak")}>
           <Icon name="mic" size={20} />
         </button>
         <input
           className="agent-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Type or tap the mic"
+          placeholder={t("agent.placeholder")}
           disabled={busy}
         />
-        <button type="submit" className="agent-send" disabled={busy || !input.trim()} aria-label="Send">
+        <button type="submit" className="agent-send" disabled={busy || !input.trim()} aria-label={t("agent.send")}>
           <Icon name="send" size={18} />
         </button>
       </form>
@@ -347,19 +350,19 @@ export default function AgentPanel({ messages, setMessages, onClose }) {
   return (
     <div className="agent-layer">
       <div className="agent-backdrop" onClick={onClose} />
-      <aside className="agent-panel" role="dialog" aria-label="GoldLedger assistant">
+      <aside className="agent-panel" role="dialog" aria-label={t("agent.title")}>
         <header className="agent-head">
           <div>
-            <strong>Assistant</strong>
-            <small>Gnani Prisma sunta hai, Timbre bolta hai</small>
+            <strong>{t("agent.title")}</strong>
+            <small>{t("agent.sub")}</small>
           </div>
           <div className="agent-head-actions">
             {messages.length > 0 && (
               <button className="btn btn-ghost btn-sm" onClick={newChat}>
-                New chat
+                {t("agent.newChat")}
               </button>
             )}
-            <button className="icon-btn" onClick={onClose} aria-label="Close">
+            <button className="icon-btn" onClick={onClose} aria-label={t("common.close")}>
               <Icon name="x" />
             </button>
           </div>

@@ -1,4 +1,5 @@
 import { API_URL } from "../config.js";
+import { t } from "../lib/i18n.js";
 
 const TOKEN_KEY = "goldledger_token";
 const USER_KEY = "goldledger_user";
@@ -63,16 +64,16 @@ export async function request(path, options) {
       body: body,
     });
   } catch (err) {
-    throw new Error("Cannot reach the server. Check that the backend is running.");
+    throw new Error(t("err.network"));
   }
 
   if (response.status === 401 && token) {
     if (onUnauthorized) onUnauthorized();
-    throw new Error("Your session has ended. Please log in again.");
+    throw new Error(t("err.session"));
   }
 
   if (!response.ok) {
-    let message = "Something went wrong (" + response.status + ")";
+    let message = t("err.generic");
     try {
       const data = await response.json();
       if (data && data.message) message = data.message;

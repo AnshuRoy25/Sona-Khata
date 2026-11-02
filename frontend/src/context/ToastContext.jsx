@@ -1,9 +1,11 @@
 import { createContext, useContext, useState, useRef } from "react";
+import { useLang } from "./LanguageContext.jsx";
 
 const ToastContext = createContext(null);
 
 export function ToastProvider({ children }) {
   const [toasts, setToasts] = useState([]);
+  const { t } = useLang();
   const nextId = useRef(1);
 
   function remove(id) {
@@ -31,11 +33,11 @@ export function ToastProvider({ children }) {
 
   const items = [];
   for (let i = 0; i < toasts.length; i++) {
-    const t = toasts[i];
+    const toast = toasts[i];
     items.push(
-      <div key={t.id} className={"toast toast-" + t.tone} role="status">
-        <span>{t.message}</span>
-        <button className="toast-close" onClick={() => remove(t.id)} aria-label="Dismiss">
+      <div key={toast.id} className={"toast toast-" + toast.tone} role="status">
+        <span>{toast.message}</span>
+        <button className="toast-close" onClick={() => remove(toast.id)} aria-label={t("common.close")}>
           ×
         </button>
       </div>

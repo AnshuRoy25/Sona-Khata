@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Icon from "./Icon.jsx";
-import { speak, stopSpeaking } from "../lib/speech.js";
+import { speak, stopSpeaking, unlockAudio } from "../lib/speech.js";
 import { useToast } from "../context/ToastContext.jsx";
+import { useLang } from "../context/LanguageContext.jsx";
 
 // plays a sentence through Timbre; "Listen" by default
 export default function SpeakButton({ text, label, small }) {
   const [state, setState] = useState("idle"); // idle | loading | playing
   const toast = useToast();
+  const { t } = useLang();
 
   async function handleClick(event) {
     event.preventDefault();
@@ -18,6 +20,7 @@ export default function SpeakButton({ text, label, small }) {
       return;
     }
 
+    unlockAudio();
     setState("loading");
     try {
       await speak(text, function () {
@@ -26,13 +29,13 @@ export default function SpeakButton({ text, label, small }) {
       setState("playing");
     } catch (err) {
       setState("idle");
-      toast.error(err.message || "Could not play the audio");
+      toast.error(err.message || t("speak.error"));
     }
   }
 
-  let caption = label || "Listen";
-  if (state === "loading") caption = "Loading";
-  if (state === "playing") caption = "Stop";
+  let caption = label || t("common.listen");
+  if (state === "loading") caption = t("common.loading");
+  if (state === "playing") caption = t("common.stop");
 
   return (
     <button
@@ -40,7 +43,7 @@ export default function SpeakButton({ text, label, small }) {
       className={"btn btn-ghost" + (small ? " btn-sm" : "") + (state === "playing" ? " is-playing" : "")}
       onClick={handleClick}
       disabled={state === "loading"}
-      title="Read this aloud"
+      title={t("detail.readAloud")}
     >
       <Icon name={state === "playing" ? "stop" : "speaker"} size={16} />
       {caption}
