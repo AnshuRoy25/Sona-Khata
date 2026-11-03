@@ -1,6 +1,6 @@
-# GoldLedger frontend
+# SonaKhata frontend
 
-React + Vite web app for GoldLedger, a shared gold ledger between jewellers and karigars.
+React + Vite web app for SonaKhata, a shared gold ledger between jewellers and karigars.
 
 ## Setup
 

@@ -131,7 +131,7 @@ export default function LoginPage() {
       <section className="auth-story">
         <Link to="/" className="brand brand-light">
           <span className="brand-mark" aria-hidden="true" />
-          <span className="brand-name">GoldLedger</span>
+          <span className="brand-name">SonaKhata</span>
         </Link>
 
         <div className="auth-story-body">

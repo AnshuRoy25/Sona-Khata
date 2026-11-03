@@ -74,7 +74,7 @@ export default function HomePage() {
         <div className="home-wrap home-header-inner">
           <Link to="/" className="brand">
             <span className="brand-mark" aria-hidden="true" />
-            <span className="brand-name">GoldLedger</span>
+            <span className="brand-name">SonaKhata</span>
           </Link>
 
           <nav className="home-links">
@@ -289,7 +289,7 @@ export default function HomePage() {
         <div className="home-wrap home-footer-inner">
           <span className="brand">
             <span className="brand-mark" aria-hidden="true" />
-            <span className="brand-name">GoldLedger</span>
+            <span className="brand-name">SonaKhata</span>
           </span>
           <span className="muted">{t("home.footer.built")}</span>
           <span className="muted">© {new Date().getFullYear()} {t("home.footer.rights")}</span>

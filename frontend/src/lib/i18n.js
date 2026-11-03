@@ -29,7 +29,7 @@ const en = {
   "home.hero.eyebrow": "Gold ledger for jewellers and karigars",
   "home.hero.title": "Every gram of gold, on record for both sides.",
   "home.hero.text":
-    "GoldLedger keeps one shared record between a jeweller and his karigars. Say the entry in Hindi, English or both. It is read back to you, and nothing counts until both sides confirm.",
+    "SonaKhata keeps one shared record between a jeweller and his karigars. Say the entry in Hindi, English or both. It is read back to you, and nothing counts until both sides confirm.",
   "home.hero.cta": "Create a free account",
   "home.hero.secondary": "See how it works",
   "home.hero.note": "Works on any phone or computer. No app to install.",
@@ -61,7 +61,7 @@ const en = {
     "The other side hears the same entry and says yes or no. Once both confirm, it is locked and nobody can change it alone.",
   "home.how.s4.title": "The hisaab is done for you",
   "home.how.s4.text":
-    "When the work comes back, GoldLedger works out gold given, gold returned, agreed wastage and the difference.",
+    "When the work comes back, SonaKhata works out gold given, gold returned, agreed wastage and the difference.",
 
   "home.for.title": "Made for both sides of the counter",
   "home.for.j.title": "For jewellers",
@@ -94,7 +94,7 @@ const en = {
   "home.cta.title": "Start your shared ledger today",
   "home.cta.text": "Create an account with your mobile number. Add your first order in under a minute.",
   "home.footer.built": "Speech by Gnani Prisma and Timbre",
-  "home.footer.rights": "GoldLedger",
+  "home.footer.rights": "SonaKhata",
 
   // auth
   "auth.story.title": "The gold in a karigar's hands, on record for both of them.",
@@ -359,7 +359,7 @@ const hi = {
   "home.hero.eyebrow": "ज्वेलर और कारीगर के लिए सोने का हिसाब",
   "home.hero.title": "हर ग्राम सोने का हिसाब, दोनों के पास।",
   "home.hero.text":
-    "GoldLedger ज्वेलर और उसके कारीगरों के बीच एक ही साझा हिसाब रखता है। एंट्री हिंदी, इंग्लिश या दोनों में बोलिए। वो आपको पढ़कर सुनाई जाती है, और जब तक दोनों हाँ न कहें, कुछ पक्का नहीं होता।",
+    "SonaKhata ज्वेलर और उसके कारीगरों के बीच एक ही साझा हिसाब रखता है। एंट्री हिंदी, इंग्लिश या दोनों में बोलिए। वो आपको पढ़कर सुनाई जाती है, और जब तक दोनों हाँ न कहें, कुछ पक्का नहीं होता।",
   "home.hero.cta": "मुफ़्त खाता बनाएँ",
   "home.hero.secondary": "देखें कैसे काम करता है",
   "home.hero.note": "किसी भी फ़ोन या कंप्यूटर पर चलता है। कोई ऐप इंस्टॉल नहीं करना।",
@@ -390,7 +390,7 @@ const hi = {
   "home.how.s3.text":
     "दूसरी तरफ़ वाला वही एंट्री सुनता है और हाँ या ना कहता है। दोनों की हाँ के बाद एंट्री लॉक हो जाती है, कोई अकेले नहीं बदल सकता।",
   "home.how.s4.title": "हिसाब अपने आप",
-  "home.how.s4.text": "काम वापस आने पर GoldLedger दिया सोना, लौटा सोना, तय वेस्टेज और फ़र्क़ खुद निकाल देता है।",
+  "home.how.s4.text": "काम वापस आने पर SonaKhata दिया सोना, लौटा सोना, तय वेस्टेज और फ़र्क़ खुद निकाल देता है।",
 
   "home.for.title": "काउंटर के दोनों तरफ़ के लिए बना",
   "home.for.j.title": "ज्वेलर के लिए",
@@ -423,7 +423,7 @@ const hi = {
   "home.cta.title": "आज ही अपना साझा हिसाब शुरू करें",
   "home.cta.text": "अपने मोबाइल नंबर से खाता बनाइए। पहला ऑर्डर एक मिनट से कम में।",
   "home.footer.built": "आवाज़: Gnani Prisma और Timbre",
-  "home.footer.rights": "GoldLedger",
+  "home.footer.rights": "SonaKhata",
 
   "auth.story.title": "जो सोना कारीगर के हाथ में जाता है, उसका हिसाब दोनों के पास होता है।",
   "auth.story.text":

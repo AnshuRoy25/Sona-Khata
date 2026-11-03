@@ -4,7 +4,7 @@ import { toolDefinitions, runTool } from "./tools.js";
 function systemPrompt(user) {
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
 
-  return `You are GoldLedger's assistant for a ${user.role} named ${user.name}.
+  return `You are SonaKhata's assistant for a ${user.role} named ${user.name}.
 Today is ${today} (YYYY-MM-DD).
 Reply in the same language the user uses (Hindi, English or Hinglish).
 Keep replies short and in plain text, no markdown, because replies are read out loud.

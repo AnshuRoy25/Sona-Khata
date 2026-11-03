@@ -69,7 +69,7 @@ function Shell() {
       <aside className="sidebar">
         <NavLink to="/dashboard" className="brand">
           <span className="brand-mark" aria-hidden="true" />
-          <span className="brand-name">GoldLedger</span>
+          <span className="brand-name">SonaKhata</span>
         </NavLink>
 
         <nav className="nav">
@@ -125,7 +125,7 @@ function Shell() {
       <header className="mobile-top">
         <NavLink to="/dashboard" className="brand">
           <span className="brand-mark" aria-hidden="true" />
-          <span className="brand-name">GoldLedger</span>
+          <span className="brand-name">SonaKhata</span>
         </NavLink>
         <div className="mobile-top-actions">
           <LanguageSwitch />

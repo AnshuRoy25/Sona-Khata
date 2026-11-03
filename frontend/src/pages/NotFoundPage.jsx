@@ -10,7 +10,7 @@ export default function NotFoundPage() {
     <div className="not-found">
       <Link to="/" className="brand">
         <span className="brand-mark" aria-hidden="true" />
-        <span className="brand-name">GoldLedger</span>
+        <span className="brand-name">SonaKhata</span>
       </Link>
       <p>{t("notFound.text")}</p>
       <Link to="/" className="btn btn-primary">
