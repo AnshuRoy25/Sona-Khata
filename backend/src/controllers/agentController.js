@@ -1,6 +1,5 @@
-import { runAgent } from "../ai/agent.js";
-import { transcribe } from "../ai/gnani.js";
-
+import { runAgent } from "../ai/agent/runAgent.js";
+import { transcribe } from "../ai/voice/gnani.js";
 // POST /api/agent/chat
 export async function agentChat(req, res) {
   try {

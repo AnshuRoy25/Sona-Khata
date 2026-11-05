@@ -1,4 +1,4 @@
-import { speak } from "../ai/gnani.js";
+import { speak } from "../ai/voice/gnani.js";
 
 // POST /api/voice/speak  { text }
 export async function speakText(req, res) {

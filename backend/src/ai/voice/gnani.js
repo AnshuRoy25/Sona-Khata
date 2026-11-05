@@ -1,6 +1,4 @@
-import fs from "fs";
-import path from "path";
-import config from "../config/config.js";
+import config from "../../config/config.js";
 
 const STT_URL = "https://api.vachana.ai/stt/v3";
 const TTS_URL = "https://api.vachana.ai/api/v1/tts/inference";
