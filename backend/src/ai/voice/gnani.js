@@ -9,7 +9,7 @@ export async function transcribe(buffer, fileName) {
   const form = new FormData();
   form.append("audio_file", new Blob([buffer]), fileName);
   form.append("model", "prisma-v3.0");
-  form.append("language_code", "indic-auto");
+  form.append("language_code", "hi-IN,en-IN");
   form.append("format", "transcribe");
 
   const response = await fetch(STT_URL, {
@@ -38,9 +38,9 @@ export async function speak(text) {
     },
     body: JSON.stringify({
       text: text,
-      model: "timbre-v3.0",
-      voice: "Shivani",
-      language: "auto",
+      model: "timbre-v2.5",
+      voice: "Poorvi",
+      language: "hi-en",
       audio_config: { container: "mp3", sample_rate: 24000 },
     }),
   });
