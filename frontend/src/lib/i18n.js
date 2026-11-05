@@ -29,7 +29,7 @@ const en = {
   "home.hero.eyebrow": "Gold ledger for jewellers and karigars",
   "home.hero.title": "Every gram of gold, on record for both sides.",
   "home.hero.text":
-    "SonaKhata keeps one shared record between a jeweller and his karigars. Say the entry in Hindi, English or both. It is read back to you, and nothing counts until both sides confirm.",
+    "SonaKhata keeps one shared record between a jeweller and his karigars. Say the entry in Hindi, English or any Indian language. It is read back to you, and nothing counts until both sides confirm.",
   "home.hero.cta": "Create a free account",
   "home.hero.secondary": "See how it works",
   "home.hero.note": "Works on any phone or computer. No app to install.",
@@ -138,7 +138,7 @@ const en = {
   "nav.orders": "Orders",
   "nav.newOrder": "New order",
   "nav.assistant": "Talk to assistant",
-  "nav.assistantSub": "Hindi, English or both",
+  "nav.assistantSub": "Hindi, English and more",
   "nav.logout": "Log out",
   "logout.title": "Log out?",
   "logout.text": "You will need your phone number and a new code to log in again.",
@@ -307,7 +307,7 @@ const en = {
 
   // assistant
   "agent.title": "Assistant",
-  "agent.sub": "Speak or type in Hindi, English or both",
+  "agent.sub": "Speak or type in Hindi, English or any Indian language",
   "agent.newChat": "New chat",
   "agent.hello": "Namaste, {name}",
   "agent.intro":
@@ -359,7 +359,7 @@ const hi = {
   "home.hero.eyebrow": "ज्वेलर और कारीगर के लिए सोने का हिसाब",
   "home.hero.title": "हर ग्राम सोने का हिसाब, दोनों के पास।",
   "home.hero.text":
-    "SonaKhata ज्वेलर और उसके कारीगरों के बीच एक ही साझा हिसाब रखता है। एंट्री हिंदी, इंग्लिश या दोनों में बोलिए। वो आपको पढ़कर सुनाई जाती है, और जब तक दोनों हाँ न कहें, कुछ पक्का नहीं होता।",
+    "SonaKhata ज्वेलर और उसके कारीगरों के बीच एक ही साझा हिसाब रखता है। एंट्री हिंदी, इंग्लिश या किसी भी भारतीय भाषा में बोलिए। वो आपको पढ़कर सुनाई जाती है, और जब तक दोनों हाँ न कहें, कुछ पक्का नहीं होता।",
   "home.hero.cta": "मुफ़्त खाता बनाएँ",
   "home.hero.secondary": "देखें कैसे काम करता है",
   "home.hero.note": "किसी भी फ़ोन या कंप्यूटर पर चलता है। कोई ऐप इंस्टॉल नहीं करना।",
@@ -465,7 +465,7 @@ const hi = {
   "nav.orders": "ऑर्डर",
   "nav.newOrder": "नया ऑर्डर",
   "nav.assistant": "असिस्टेंट से बात करें",
-  "nav.assistantSub": "हिंदी, इंग्लिश या दोनों",
+  "nav.assistantSub": "हिंदी, इंग्लिश और भी भाषाएँ",
   "nav.logout": "लॉग आउट",
   "logout.title": "लॉग आउट करें?",
   "logout.text": "फिर से लॉग इन करने के लिए आपको फ़ोन नंबर और नया कोड चाहिए होगा।",
@@ -622,7 +622,7 @@ const hi = {
   "entry.rejectedToast": "एंट्री मना कर दी गई",
 
   "agent.title": "असिस्टेंट",
-  "agent.sub": "हिंदी, इंग्लिश या दोनों में बोलें या लिखें",
+  "agent.sub": "हिंदी, इंग्लिश या किसी भी भारतीय भाषा में बोलें या लिखें",
   "agent.newChat": "नई बातचीत",
   "agent.hello": "नमस्ते, {name}",
   "agent.intro":
